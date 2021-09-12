@@ -3,6 +3,35 @@
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
+# Builds App.
+#
+# Usage:
+#  $ ./helper.sh
+build() {
+    # The go mod tidy command cleans up these unused dependencies
+    go mod tidy
+    # build
+    go build -o ./bin/app
+}
+
+# Builds a development Docker image.
+#
+# Usage:
+#  $ ./helper.sh
+build_docker() {
+    local ARG0="$1" # ECR
+    docker build -t ${ARG0}.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly:dev .
+}
+
+build_push() {
+    local ARG0="$1" # ECR
+    build_docker ${ARG0}
+    docker push ${ARG0}.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly:dev
+}
+
+run_deploy() {
+    kubectl apply -k kustomize/overlays/dev
+}
 
 # Runs the main program.
 #
@@ -30,6 +59,18 @@ main() {
   local ARG0="$1"
   local ARG1="$2"
   case "$ARG0" in
+    build)
+        build
+    ;;
+    build-docker)
+        build_docker "$ARG1"
+    ;;
+    build-push)
+        build_push "$ARG1"
+    ;;
+    deploy)
+        run_deploy
+    ;;
     run)
         run
     ;;

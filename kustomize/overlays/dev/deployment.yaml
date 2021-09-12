@@ -17,3 +17,4 @@ spec:
       containers:
       - name: anomaly-detection
         image: 073180495245.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly:dev
+        imagePullPolicy: Always
