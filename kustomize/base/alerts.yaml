@@ -45,7 +45,7 @@ spec:
             + job:http_requests:rate5m:avg_over_time_1w
  
         - record: job:http_requests:rate5m_prediction3
-          expr: >
+          expr: |-
            quantile(0.5,
              label_replace(
                avg_over_time(job:http_requests:rate5m[4h] offset 166h)
@@ -65,7 +65,7 @@ spec:
            without (offset)           
 
         - alert: RequestRateOutsideNormalRange
-          expr: >
+          expr: |-
            abs(
              (
                job:http_requests:rate5m - job:http_requests:rate5m_prediction3
