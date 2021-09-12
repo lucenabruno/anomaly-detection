@@ -27,3 +27,9 @@ Test Features:
 - [] refactor ecr-auth
 - [] refactor image generated
 - [] refactor swap name
+
+- [] K6 Operator - $ kubectl create configmap my-stress-test --from-file k6-load-test.js
+
+
+- [] Jaeger
+- [] /metrics endpoint

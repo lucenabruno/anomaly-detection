@@ -39,3 +39,6 @@ terratest: ## Runs terratest
 
 sniff: ## Sniffs any pod comunication
 	@./helper.sh sniff ${LABEL} ${NAMESPACE}
+
+k6: ## Runs k6
+	@k6 run --vus 10 --duration 30s test/k6/test.js
