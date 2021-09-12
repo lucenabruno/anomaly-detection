@@ -63,9 +63,21 @@ run_ecr_auth(){
 	awsudo -u mobimeo-admin aws ecr get-login-password | docker login --username AWS --password-stdin ${ARG0}.dkr.ecr.eu-central-1.amazonaws.com
 }
 
+# sniffs pod
+#
+# Usage:
+#  $ ./helper.sh sniff
+run_sniff() {
+    local LABEL="$1"
+    local NAMESPACE="$2"
+    local POD_NAME=$(kubectl get pod -l app="$LABEL" -o jsonpath='{.items[0].metadata.name}' -n "$NAMESPACE")
+	kubectl sniff ${POD_NAME} -n "$NAMESPACE" -p | wireshark 
+}
+
 main() {
   local ARG0="$1"
   local ARG1="$2"
+  local ARG2="$3"
   case "$ARG0" in
     build)
         build
@@ -91,6 +103,9 @@ main() {
     telepresence-swap)
 	    telepresence --swap-deployment anomaly-detection --expose "$ARG1" --run ./bin/app --port="$ARG1"
 
+    ;;
+    sniff)
+        run_sniff "$ARG1" "$ARG2"
     ;;
   esac
 }
