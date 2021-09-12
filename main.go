@@ -63,3 +63,7 @@ func randomRequests() {
 		}
 	}
 }
+
+func randomRequests2() {
+
+}

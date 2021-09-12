@@ -80,6 +80,10 @@ main() {
     ecr-auth)
         run_ecr_auth "$ARG1"
     ;;
+    telepresence-swap)
+	    telepresence --swap-deployment anomaly-detection --expose "$ARG1" --run ./bin/app --port="$ARG1"
+
+    ;;
   esac
 }
 
