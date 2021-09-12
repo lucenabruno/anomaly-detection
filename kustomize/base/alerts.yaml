@@ -13,7 +13,7 @@ spec:
         - record: job:http_requests:rate5m
           expr: |-
             sum without(container, instance, namespace, pod, endpoint, exported_service, service)
-                (rate(kong_http_status{route="default.anomaly-detection.00"}[5m]))
+                (rate(kong_http_status{route="default.echo.00"}[5m]))
           labels:
             severity: warning
             job: "test1"
