@@ -1,0 +1,78 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: anomaly.rules
+  # Note: labels are important!
+  labels:
+    app: kube-prometheus-stack
+spec:
+  groups:
+    - name: anomaly.rules
+      rules:
+        - record: job:http_requests:rate5m
+          expr: |-
+            sum without(container, instance, namespace, pod, endpoint, exported_service, service)
+                (rate(kong_http_status{route="default.anomaly-detection.00"}[5m]))
+          labels:
+            severity: warning
+            job: "test1"
+            namespace: "{{ $labels.namespace }}"
+
+        - record: job:http_requests:rate5m:avg_over_time_1w
+          expr: avg_over_time(job:http_requests:rate5m[1w])
+          labels:
+            severity: warning
+            job: "test2"
+            namespace: "{{ $labels.namespace }}"
+
+        - record: job:http_requests:rate5m:stddev_over_time_1w
+          expr: stddev_over_time(job:http_requests:rate5m[1w])
+          labels:
+            severity: warning
+            job: "test3"
+            namespace: "{{ $labels.namespace }}"
+
+        - record: job:http_requests:rate5m_prediction1
+          expr: >
+            job:http_requests:rate5m offset 1w 
+            + job:http_requests:rate5m:avg_over_time_1w
+            - job:http_requests:rate5m:avg_over_time_1w offset 1w
+
+        - record: job:http_requests:rate5m_prediction2
+          expr: >
+            avg_over_time(job:http_requests:rate5m[4h] offset 166h)
+            + job:http_requests:rate5m:avg_over_time_1w
+ 
+        - record: job:http_requests:rate5m_prediction3
+          expr: >
+           quantile(0.5,
+             label_replace(
+               avg_over_time(job:http_requests:rate5m[4h] offset 166h)
+               + job:http_requests:rate5m:avg_over_time_1w - job:http_requests:rate5m:avg_over_time_1w offset 1w
+               , "offset", "1w", "", "")
+             or
+             label_replace(
+               avg_over_time(job:http_requests:rate5m[4h] offset 334h)
+               + job:http_requests:rate5m:avg_over_time_1w - job:http_requests:rate5m:avg_over_time_1w offset 2w
+               , "offset", "2w", "", "")
+             or
+             label_replace(
+               avg_over_time(job:http_requests:rate5m[4h] offset 502h)
+               + job:http_requests:rate5m:avg_over_time_1w - job:http_requests:rate5m:avg_over_time_1w offset 3w
+               , "offset", "3w", "", "")
+           )
+           without (offset)           
+
+        - alert: RequestRateOutsideNormalRange
+          expr: >
+           abs(
+             (
+               job:http_requests:rate5m - job:http_requests:rate5m_prediction3
+             ) / job:http_requests:rate5m:stddev_over_time_1w
+           ) > 2
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Requests for job {{ $labels.job }} are outside of expected operating parameters

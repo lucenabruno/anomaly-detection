@@ -3,3 +3,4 @@ resources:
   - secret.yaml
   - service.yaml
   - ingress.yaml
+  - alerts.yaml
