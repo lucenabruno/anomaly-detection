@@ -5,6 +5,8 @@ metadata:
   name: anomaly-detection
   annotations:
     kubernetes.io/ingress.class: kong
+    # Strip the path defined in Ingress resource and then forward the request to the upstream service.
+    konghq.com/strip-path: "true"
 spec:
   rules:
   - http:
