@@ -1,13 +1,15 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/gofiber/fiber"
 
 func main() {
-	for {
-		fmt.Println("tick")
-		time.Sleep(time.Second)
-	}
+	app := fiber.New()
+
+	app.Get("/", hello)
+
+	app.Listen(":3000")
+}
+
+func hello(c *fiber.Ctx) {
+	c.Send("Hello, world 👋!")
 }
