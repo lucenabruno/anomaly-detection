@@ -14,7 +14,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	go randomRequests()
+	go randomRequests2()
 
 	app.Get("/hello", hello)
 
@@ -49,21 +49,52 @@ func randomRequests() {
 			}
 			// make a request
 			fmt.Printf("request: %d\n", i)
-			resp, err := http.Get("https://api.dev.mobimeo.com/echo")
-			if err != nil {
-				log.Fatalln(err)
-			}
-			//We Read the response body on the line below.
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				log.Fatalln(err)
-			}
-			sb := string(body)
-			fmt.Printf("%s\n", sb)
+			request()
 		}
 	}
 }
 
+func request() {
+	resp, err := http.Get("https://api.dev.mobimeo.com/echo")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	//We Read the response body on the line below.
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	sb := string(body)
+	fmt.Printf("%s\n", sb)
+}
+
 func randomRequests2() {
 
+	count := 0
+	isDivisibleBy := false
+
+	for {
+		requests := []int{1, 1, 2, 3, 5, 8, 13, 21}
+		for i, s := range requests {
+			// pick up one interval at random
+			if isDivisibleBy {
+				// make n requests based on the outlier
+				outlier := random(30, 40) // above 4σ: 24 is an outlier
+				fmt.Println(outlier)
+
+				for j := 0; j <= outlier; j++ {
+					request()
+				}
+			} else {
+				fmt.Println(s)
+				// make n requests based on the sequence number
+				for j := 0; j <= i; j++ {
+					request()
+				}
+			}
+			count++
+			isDivisibleBy = count%random(1, 10) == 0
+			time.Sleep(time.Duration(10) * time.Second)
+		}
+	}
 }
