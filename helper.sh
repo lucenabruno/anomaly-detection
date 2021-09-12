@@ -6,7 +6,7 @@ set -e # Exit immediately if a command exits with a non-zero status.
 # Builds App.
 #
 # Usage:
-#  $ ./helper.sh
+#  $ ./helper.sh build
 build() {
     # The go mod tidy command cleans up these unused dependencies
     go mod tidy
@@ -17,12 +17,16 @@ build() {
 # Builds a development Docker image.
 #
 # Usage:
-#  $ ./helper.sh
+#  $ ./helper.sh build-docker <ecr-id>
 build_docker() {
     local ARG0="$1" # ECR
     docker build -t ${ARG0}.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly:dev .
 }
 
+# Builds a development Docker image.
+#
+# Usage:
+#  $ ./helper.sh build-push <ecr-id>
 build_push() {
     local ARG0="$1" # ECR
     build_docker ${ARG0}
@@ -44,14 +48,18 @@ run () {
 # Runs Skaffold.
 #
 # Usage:
-#  $ ./helper.sh skaffold
+#  $ ./helper.sh skaffold <skaffold-profile>
 run_skaffold() {
-    local ARG0="$1" # profile 
+    local ARG0="$1" 
     ENV=dev skaffold dev -p ${ARG0} -f skaffold.yaml --force=false --cache-artifacts=true --port-forward=true 
 }
 
+# Authenticates to ECR
+#
+# Usage:
+#  $ ./helper.sh auth-ecr <ecr-id>
 run_ecr_auth(){
-    local ARG0="$1" # ECR id
+    local ARG0="$1"
 	awsudo -u mobimeo-admin aws ecr get-login-password | docker login --username AWS --password-stdin ${ARG0}.dkr.ecr.eu-central-1.amazonaws.com
 }
 

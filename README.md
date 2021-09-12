@@ -11,15 +11,19 @@ This service will sleep according to a sequence(e.g. Fibonacci) and then will pe
 
 # Fiber
 
-Features:
+Test Features:
 
-- Robust routing
-- Serve static files
-- Extreme performance
-- Low memory footprint
-- API endpoints
-- Middleware & Next support
-- Rapid server-side programming
-- Template engines
-- WebSocket support
-- Rate Limiter
+- [] Robust routing
+- [] Serve static files
+- [] Low memory footprint
+- [] API endpoints
+- [] Middlewares
+- [] Template engines
+- [] WebSocket support
+
+# TODO
+
+- [] bin.sh: docker, go, kubectl, skaffold, telepresence
+- [] refactor ecr-auth
+- [] refactor image generated
+- [] refactor swap name
