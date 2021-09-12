@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+
+profiles:
+  - name: dev
+    build:
+      tagPolicy:
+        envTemplate:
+          template: "{{.ENV}}"
+      local:
+        push: true
+      artifacts:
+        - image: 073180495245.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly
+          context: .
+          docker: 
+            dockerfile: Dockerfile
+    deploy:
+      kustomize:
+        paths: 
+          - kustomize/overlays/dev

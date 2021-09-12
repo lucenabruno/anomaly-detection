@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anomaly-detection
+  labels:
+    app: anomaly-detection
+    environment: dev
+spec:
+  selector:
+    matchLabels:
+      app: anomaly-detection
+  template:
+    metadata:
+      labels:
+        app: anomaly-detection
+    spec:
+      containers:
+      - name: anomaly-detection
+        image: 073180495245.dkr.ecr.eu-central-1.amazonaws.com/io-team/anomaly:dev
