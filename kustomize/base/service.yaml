@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: anomaly-detection
+  labels:
+    app: anomaly-detection
 spec:
   selector:
     app: anomaly-detection
@@ -9,3 +11,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 3000
+      name: web
