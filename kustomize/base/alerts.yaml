@@ -21,14 +21,14 @@ spec:
             namespace: "{{ $labels.namespace }}"
 
         - record: job:http_requests:rate5m:avg_over_time_1w
-          expr: avg_over_time(job:http_requests:rate5m[1w])
+          expr: avg_over_time(job:http_requests:rate5m{route="default.echo.00"}[1w])
           labels:
             severity: warning
             job: "test2"
             namespace: "{{ $labels.namespace }}"
 
         - record: job:http_requests:rate5m:stddev_over_time_1w
-          expr: stddev_over_time(job:http_requests:rate5m[1w])
+          expr: stddev_over_time(job:http_requests:rate5m{route="default.echo.00"}[1w])
           labels:
             severity: warning
             job: "test3"
