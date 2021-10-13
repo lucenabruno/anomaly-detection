@@ -13,23 +13,23 @@ This service will sleep according to a sequence(e.g. Fibonacci) and then will pe
 
 Test Features:
 
-- [] Robust routing
-- [] Serve static files
-- [] Low memory footprint
-- [] API endpoints
-- [] Middlewares
-- [] Template engines
-- [] WebSocket support
+- [ ] Robust routing
+- [ ] Serve static files
+- [ ] Low memory footprint
+- [ ] API endpoints
+- [ ] Middlewares
+- [ ] Template engines
+- [ ] WebSocket support
 
 # TODO
 
-- [] bin.sh: docker, go, kubectl, skaffold, telepresence
-- [] refactor ecr-auth
-- [] refactor image generated
-- [] refactor swap name
+- [ ] bin.sh: docker, go, kubectl, skaffold, telepresence
+- [ ] refactor ecr-auth
+- [ ] refactor image generated
+- [ ] refactor swap name
 
-- [] K6 Operator - $ kubectl create configmap my-stress-test --from-file k6-load-test.js
+- [ ] K6 Operator - $ kubectl create configmap my-stress-test --from-file k6-load-test.js
 
 
-- [] Jaeger
-- [] /metrics endpoint
+- [ ] Jaeger
+- [ ] /metrics endpoint
